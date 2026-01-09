@@ -8,8 +8,27 @@ class Penyewa extends Model
 {
     protected $table = 'penyewa';
     
-    // TODO: Definisikan kolom yang dapat diisi (mass assignment)
-    protected $fillable = [];
+    protected $fillable = [
+        'nama_lengkap',
+        'nomor_telepon',
+        'nomor_ktp',
+        'alamat_asal',
+        'pekerjaan'
+    ];
     
-    // TODO: Definisikan relasi ke tabel lain
+    /**
+     * Relasi ke KontrakSewa
+     */
+    public function kontrakSewa()
+    {
+        return $this->hasMany(KontrakSewa::class, 'penyewa_id');
+    }
+    
+    /**
+     * Mendapatkan kontrak aktif
+     */
+    public function kontrakAktif()
+    {
+        return $this->hasMany(KontrakSewa::class, 'penyewa_id')->where('status', 'aktif');
+    }
 }

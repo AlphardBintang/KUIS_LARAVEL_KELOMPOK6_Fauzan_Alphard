@@ -24,7 +24,7 @@ class DashboardController extends Controller
         // 3. Jumlah tunggakan (pembayaran dengan status 'tertunggak')
         $jumlahTunggakan = Pembayaran::where('status', 'tertunggak')->count();
 
-        return view('dashboard', compact(
+        return view('dashboard.dashboard', compact(
             'totalKamar', 
             'kamarTerisi', 
             'kamarTersedia', 

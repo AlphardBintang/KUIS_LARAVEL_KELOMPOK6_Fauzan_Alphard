@@ -39,7 +39,7 @@ class KamarController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nomor_kamar' => 'required|unique:kamars,nomor_kamar|max:10',
+            'nomor_kamar' => 'required|unique:kamar,nomor_kamar|max:10',
             'tipe' => 'required|in:standard,deluxe,vip',
             'harga_bulanan' => 'required|numeric|min:0',
             'fasilitas' => 'required|string',
@@ -47,7 +47,7 @@ class KamarController extends Controller
 
         Kamar::create($request->all());
 
-        return redirect()->route('kamars.index')->with('success', 'Kamar berhasil ditambahkan');
+        return redirect()->route('kamar.index')->with('success', 'Kamar berhasil ditambahkan');
     }
 
     // 3. Edit kamar (Form)
@@ -60,7 +60,7 @@ class KamarController extends Controller
     public function update(Request $request, Kamar $kamar)
     {
         $request->validate([
-            'nomor_kamar' => 'required|max:10|unique:kamars,nomor_kamar,' . $kamar->id,
+            'nomor_kamar' => 'required|max:10|unique:kamar,nomor_kamar,' . $kamar->id,
             'tipe' => 'required|in:standard,deluxe,vip',
             'harga_bulanan' => 'required|numeric|min:0',
             'fasilitas' => 'required|string',
@@ -69,7 +69,7 @@ class KamarController extends Controller
 
         $kamar->update($request->all());
 
-        return redirect()->route('kamars.index')->with('success', 'Data kamar berhasil diperbarui');
+        return redirect()->route('kamar.index')->with('success', 'Data kamar berhasil diperbarui');
     }
 
     // 4. Hapus kamar
@@ -81,6 +81,6 @@ class KamarController extends Controller
 
         $kamar->delete();
 
-        return redirect()->route('kamars.index')->with('success', 'Kamar berhasil dihapus');
+        return redirect()->route('kamar.index')->with('success', 'Kamar berhasil dihapus');
     }
 }
