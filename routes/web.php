@@ -26,3 +26,6 @@ Route::resource('pembayaran', PembayaranController::class);
 // Routes untuk Export Laporan
 Route::get('/export/pembayaran/excel', [ExportController::class, 'exportExcel'])->name('export.pembayaran.excel');
 Route::get('/export/pembayaran/pdf', [ExportController::class, 'exportPdf'])->name('export.pembayaran.pdf');
+
+// Routes untuk Generate tagiha
+Route::post('/generate-tagihan', [PembayaranController::class, 'generateTagihan'])->name('pembayaran.generate');

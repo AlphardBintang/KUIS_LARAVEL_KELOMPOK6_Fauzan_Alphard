@@ -68,13 +68,13 @@ class KontrakSewaController extends Controller
         }
 
         // Buat kontrak
-        $kontrak = KontrakSewa::create($validated);
+        $kontrak = KontrakSewa::create($request->all());
 
         // Update status kamar menjadi terisi
+        $kamar = Kamar::find($request->kamar_id);
         $kamar->update(['status' => 'terisi']);
 
-        return redirect()->route('kontrak-sewa.index')
-            ->with('success', 'Kontrak sewa berhasil dibuat');
+        return redirect()->route('kontrak.index')->with('success', 'Kontrak berhasil dibuat!');
     }
 
     /**

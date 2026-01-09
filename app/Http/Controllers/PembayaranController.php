@@ -145,4 +145,35 @@ class PembayaranController extends Controller
         return redirect()->route('pembayaran.index')
             ->with('success', 'Pembayaran berhasil dihapus');
     }
+
+    public function generateTagihan()
+{
+    $bulanIni = now()->month;
+    $tahunIni = now()->year;
+
+    // Ambil kontrak yang statusnya masih 'aktif'
+    $kontrakAktif = KontrakSewa::where('status', 'aktif')->get();
+    $count = 0;
+
+    foreach ($kontrakAktif as $kontrak) {
+        // Cek apakah tagihan bulan ini sudah pernah dibuat sebelumnya
+        $exists = Pembayaran::where('kontrak_sewa_id', $kontrak->id)
+                            ->where('bulan', $bulanIni)
+                            ->where('tahun', $tahunIni)
+                            ->exists();
+
+        if (!$exists) {
+            Pembayaran::create([
+                'kontrak_sewa_id' => $kontrak->id,
+                'bulan' => $bulanIni,
+                'tahun' => $tahunIni,
+                'jumlah_bayar' => $kontrak->harga_bulanan,
+                'status' => 'tertunggak', // Default status sebelum dibayar
+            ]);
+            $count++;
+        }
+    }
+
+    return back()->with('success', "$count Tagihan baru berhasil dibuat otomatis.");
+    }
 }

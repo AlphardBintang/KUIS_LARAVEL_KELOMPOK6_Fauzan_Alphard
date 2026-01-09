@@ -11,8 +11,15 @@ class PenyewaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Penyewa::query();
+        if ($request->filled('search')) {
+        $query->where('nama_lengkap', 'like', '%' . $request->search . '%')
+              ->orWhere('nomor_telepon', 'like', '%' . $request->search . '%');
+        }
+        $penyewas = $query->paginate(10);
+        return view('penyewa.index', compact('penyewas'));
         $penyewas = Penyewa::with(['kontrakAktif.kamar', 'kontrakAktif.pembayaran'])
             ->orderBy('created_at', 'desc')
             ->get();

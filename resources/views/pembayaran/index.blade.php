@@ -20,6 +20,12 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Daftar Pembayaran</h1>
         <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <form action="{{ route('pembayaran.generate') }}" method="POST" class="mb-4">
+                @csrf
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700">
+                Generate Tagihan Bulan Ini
+                </button>
+            </form>
             <div class="relative w-full sm:w-auto" id="exportDropdown">
                 <button onclick="toggleExportDropdown()" class="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center text-sm sm:text-base">
                     Export
