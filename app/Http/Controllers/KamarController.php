@@ -2,73 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kamar;
 use Illuminate\Http\Request;
-// TODO: Import model Kamar
 
 class KamarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // 1. List kamar & filter
+    public function index(Request $request)
     {
-        // TODO: Ambil semua data kamar dari database
-        // TODO: Tampilkan ke view 'kamar.index'
-        // BONUS: Implementasi filter berdasarkan status/tipe
+        $query = Kamar::query();
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('tipe') && $request->tipe != '') {
+            $query->where('tipe', $request->tipe);
+        }
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nomor_kamar', 'like', '%' . $request->search . '%');
+        }
+
+        $kamars = $query->latest()->paginate(10);
+
+        return view('kamar.index', compact('kamars'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // 2. Tambah kamar (Form)
     public function create()
     {
-        // TODO: Tampilkan form tambah kamar di view 'kamar.create'
+        return view('kamar.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // 2. Tambah kamar (Store)
     public function store(Request $request)
     {
-        // TODO: Validasi input (nomor_kamar unique, harga positif, dll)
-        // TODO: Simpan data kamar baru ke database
-        // TODO: Redirect ke index dengan pesan sukses
+        $request->validate([
+            'nomor_kamar' => 'required|unique:kamars,nomor_kamar|max:10',
+            'tipe' => 'required|in:standard,deluxe,vip',
+            'harga_bulanan' => 'required|numeric|min:0',
+            'fasilitas' => 'required|string',
+        ]);
+
+        Kamar::create($request->all());
+
+        return redirect()->route('kamars.index')->with('success', 'Kamar berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // 3. Edit kamar (Form)
+    public function edit(Kamar $kamar)
     {
-        // TODO: Ambil data kamar berdasarkan id
-        // TODO: Tampilkan detail kamar di view 'kamar.show'
+        return view('kamar.edit', compact('kamar'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // 3. Edit kamar (Update)
+    public function update(Request $request, Kamar $kamar)
     {
-        // TODO: Ambil data kamar berdasarkan id
-        // TODO: Tampilkan form edit di view 'kamar.edit'
+        $request->validate([
+            'nomor_kamar' => 'required|max:10|unique:kamars,nomor_kamar,' . $kamar->id,
+            'tipe' => 'required|in:standard,deluxe,vip',
+            'harga_bulanan' => 'required|numeric|min:0',
+            'fasilitas' => 'required|string',
+            'status' => 'required|in:tersedia,terisi',
+        ]);
+
+        $kamar->update($request->all());
+
+        return redirect()->route('kamars.index')->with('success', 'Data kamar berhasil diperbarui');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // 4. Hapus kamar
+    public function destroy(Kamar $kamar)
     {
-        // TODO: Validasi input
-        // TODO: Update data kamar
-        // TODO: Redirect ke index dengan pesan sukses
-    }
+        if ($kamar->kontrakSewa()->exists()) {
+            return back()->with('error', 'Kamar tidak bisa dihapus karena memiliki riwayat sewa.');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        // TODO: Hapus data kamar (cek dulu apakah sudah pernah disewa)
-        // TODO: Redirect dengan pesan sukses/error
+        $kamar->delete();
+
+        return redirect()->route('kamars.index')->with('success', 'Kamar berhasil dihapus');
     }
 }

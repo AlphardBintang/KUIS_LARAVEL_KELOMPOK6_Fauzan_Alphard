@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 // TODO: Import controllers yang sudah dibuat
 
 // TODO: Route untuk Dashboard (halaman utama)
+use App\Http\Controllers\KamarController;
+use App\Http\Controllers\DashboardController;
+
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::resource('kamars', KamarController::class);
 Route::get('/', function () {
     return view('welcome');
 });
