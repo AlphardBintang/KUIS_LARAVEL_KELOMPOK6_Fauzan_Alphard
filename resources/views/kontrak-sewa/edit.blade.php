@@ -3,10 +3,10 @@
 @section('title', 'Edit Kontrak Sewa')
 
 @section('content')
-<div class="max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Kontrak Sewa</h1>
+<div class="max-w-2xl mx-auto px-4 sm:px-0">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Edit Kontrak Sewa</h1>
 
-    <form action="{{ route('kontrak-sewa.update', $kontrak->id) }}" method="POST" class="bg-white shadow-md rounded-lg p-6 space-y-4">
+    <form action="{{ route('kontrak-sewa.update', $kontrak->id) }}" method="POST" class="bg-white shadow-md rounded-lg p-4 sm:p-6 space-y-4">
         @csrf
         @method('PUT')
         
@@ -77,11 +77,11 @@
             @enderror
         </div>
 
-        <div class="flex justify-end space-x-2">
-            <a href="{{ route('kontrak-sewa.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+        <div class="flex flex-col sm:flex-row justify-end gap-2 sm:space-x-2 pt-4">
+            <a href="{{ route('kontrak-sewa.index') }}" class="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded text-center">
                 Batal
             </a>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Update
             </button>
         </div>

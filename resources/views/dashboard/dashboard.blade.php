@@ -3,8 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard Kost Pak Budi</h1>
+<div class="w-full">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-8">Dashboard Kost Pak Budi</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         
@@ -67,28 +67,28 @@
     {{-- Charts Section --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {{-- Chart Pendapatan 6 Bulan Terakhir --}}
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4">Pendapatan 6 Bulan Terakhir</h3>
+        <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-4">Pendapatan 6 Bulan Terakhir</h3>
             <canvas id="pendapatanChart"></canvas>
         </div>
 
         {{-- Chart Status Pembayaran --}}
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4">Status Pembayaran</h3>
+        <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-4">Status Pembayaran</h3>
             <canvas id="statusPembayaranChart"></canvas>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {{-- Chart Tipe Kamar --}}
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4">Distribusi Tipe Kamar</h3>
+        <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-4">Distribusi Tipe Kamar</h3>
             <canvas id="tipeKamarChart"></canvas>
         </div>
 
         {{-- Ringkasan Okupansi --}}
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4">Ringkasan Okupansi</h3>
+        <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-4">Ringkasan Okupansi</h3>
             <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
                 @php
                     $persentase = $totalKamar > 0 ? ($kamarTerisi / $totalKamar) * 100 : 0;
