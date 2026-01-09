@@ -1,0 +1,63 @@
+@extends('layouts.app')
+
+@section('title', 'Tambah Kamar')
+
+@section('content')
+<div class="max-w-2xl mx-auto px-4 sm:px-0">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Tambah Kamar Baru</h1>
+
+    <form action="{{ route('kamar.store') }}" method="POST" class="bg-white shadow-md rounded-lg p-4 sm:p-6 space-y-4">
+        @csrf
+        
+        {{-- Input Nomor Kamar --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Nomor Kamar</label>
+            <input type="text" name="nomor_kamar" value="{{ old('nomor_kamar') }}" placeholder="Contoh: A1, B2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('nomor_kamar') border-red-500 @enderror">
+            @error('nomor_kamar')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- Select Tipe Kamar --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Tipe Kamar</label>
+            <select name="tipe" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('tipe') border-red-500 @enderror">
+                <option value="">Pilih Tipe</option>
+                <option value="standard" {{ old('tipe') == 'standard' ? 'selected' : '' }}>Standard</option>
+                <option value="deluxe" {{ old('tipe') == 'deluxe' ? 'selected' : '' }}>Deluxe</option>
+                <option value="vip" {{ old('tipe') == 'vip' ? 'selected' : '' }}>VIP</option>
+            </select>
+            @error('tipe')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- Input Harga Bulanan --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Harga Bulanan (Rp)</label>
+            <input type="number" name="harga_bulanan" value="{{ old('harga_bulanan') }}" step="1000" min="0" placeholder="Contoh: 1000000" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('harga_bulanan') border-red-500 @enderror">
+            @error('harga_bulanan')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- Textarea Fasilitas --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Fasilitas</label>
+            <textarea name="fasilitas" rows="3" placeholder="Contoh: AC, WiFi, Kamar Mandi Dalam, dll" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('fasilitas') border-red-500 @enderror">{{ old('fasilitas') }}</textarea>
+            @error('fasilitas')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-end gap-2 sm:space-x-2 pt-4">
+            <a href="{{ route('kamar.index') }}" class="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded text-center">
+                Batal
+            </a>
+            <button type="submit" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Simpan
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
