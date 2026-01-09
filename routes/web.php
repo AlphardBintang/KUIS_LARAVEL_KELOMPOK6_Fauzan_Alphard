@@ -6,6 +6,7 @@ use App\Http\Controllers\KamarController;
 use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\KontrakSewaController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\ExportController;
 
 // Route untuk Dashboard (halaman utama)
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -21,3 +22,7 @@ Route::resource('kontrak-sewa', KontrakSewaController::class);
 
 // Resource routes untuk CRUD Pembayaran
 Route::resource('pembayaran', PembayaranController::class);
+
+// Routes untuk Export Laporan
+Route::get('/export/pembayaran/excel', [ExportController::class, 'exportExcel'])->name('export.pembayaran.excel');
+Route::get('/export/pembayaran/pdf', [ExportController::class, 'exportPdf'])->name('export.pembayaran.pdf');

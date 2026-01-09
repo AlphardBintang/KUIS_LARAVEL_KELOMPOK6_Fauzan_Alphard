@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard')
+
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard Kost Pak Budi</h1>
@@ -62,15 +64,158 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Ringkasan Okupansi</h3>
-        <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
-            @php
-                $persentase = $totalKamar > 0 ? ($kamarTerisi / $totalKamar) * 100 : 0;
-            @endphp
-            <div class="bg-blue-600 h-4 rounded-full" style="width: {{ $persentase }}%"></div>
+    {{-- Charts Section --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {{-- Chart Pendapatan 6 Bulan Terakhir --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Pendapatan 6 Bulan Terakhir</h3>
+            <canvas id="pendapatanChart"></canvas>
         </div>
-        <p class="text-sm text-gray-500 mt-2">{{ round($persentase) }}% dari total kamar sedang terisi.</p>
+
+        {{-- Chart Status Pembayaran --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Status Pembayaran</h3>
+            <canvas id="statusPembayaranChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {{-- Chart Tipe Kamar --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Distribusi Tipe Kamar</h3>
+            <canvas id="tipeKamarChart"></canvas>
+        </div>
+
+        {{-- Ringkasan Okupansi --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Ringkasan Okupansi</h3>
+            <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
+                @php
+                    $persentase = $totalKamar > 0 ? ($kamarTerisi / $totalKamar) * 100 : 0;
+                @endphp
+                <div class="bg-blue-600 h-4 rounded-full" style="width: {{ $persentase }}%"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">{{ round($persentase) }}% dari total kamar sedang terisi.</p>
+        </div>
     </div>
 </div>
+
+{{-- Chart.js CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    // Chart Pendapatan 6 Bulan Terakhir
+    const pendapatanCtx = document.getElementById('pendapatanChart').getContext('2d');
+    new Chart(pendapatanCtx, {
+        type: 'line',
+        data: {
+            labels: @json($labelBulan),
+            datasets: [{
+                label: 'Pendapatan (Rp)',
+                data: @json($pendapatanBulanan),
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2.5,
+            plugins: {
+                legend: {
+                    display: true
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Chart Status Pembayaran
+    const statusCtx = document.getElementById('statusPembayaranChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Lunas', 'Tertunggak'],
+            datasets: [{
+                data: [{{ $pembayaranLunas }}, {{ $pembayaranTertunggak }}],
+                backgroundColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(239, 68, 68)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.2,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Chart Tipe Kamar
+    const tipeCtx = document.getElementById('tipeKamarChart').getContext('2d');
+    new Chart(tipeCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Standard', 'Deluxe', 'VIP'],
+            datasets: [{
+                label: 'Jumlah Kamar',
+                data: [{{ $kamarStandard }}, {{ $kamarDeluxe }}, {{ $kamarVip }}],
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(168, 85, 247, 0.8)',
+                    'rgba(251, 191, 36, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(59, 130, 246)',
+                    'rgb(168, 85, 247)',
+                    'rgb(251, 191, 36)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2.5,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection

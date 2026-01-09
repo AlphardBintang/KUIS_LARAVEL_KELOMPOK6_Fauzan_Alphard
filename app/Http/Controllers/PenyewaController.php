@@ -13,9 +13,18 @@ class PenyewaController extends Controller
      */
     public function index()
     {
-        $penyewas = Penyewa::with(['kontrakAktif.kamar'])
+        $penyewas = Penyewa::with(['kontrakAktif.kamar', 'kontrakAktif.pembayaran'])
             ->orderBy('created_at', 'desc')
             ->get();
+        
+        // Hitung jumlah tunggakan per penyewa
+        foreach ($penyewas as $penyewa) {
+            $tunggakan = 0;
+            foreach ($penyewa->kontrakAktif as $kontrak) {
+                $tunggakan += $kontrak->pembayaran()->where('status', 'tertunggak')->count();
+            }
+            $penyewa->jumlah_tunggakan = $tunggakan;
+        }
         
         return view('penyewa.index', compact('penyewas'));
     }

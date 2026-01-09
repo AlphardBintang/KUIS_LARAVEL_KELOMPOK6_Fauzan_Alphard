@@ -39,9 +39,18 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($penyewas as $index => $penyewa)
-                    <tr>
+                    <tr class="{{ $penyewa->jumlah_tunggakan > 0 ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-gray-50' }}">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $index + 1 }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $penyewa->nama_lengkap }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <div class="flex items-center space-x-2">
+                                <span>{{ $penyewa->nama_lengkap }}</span>
+                                @if($penyewa->jumlah_tunggakan > 0)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 animate-pulse" title="Memiliki {{ $penyewa->jumlah_tunggakan }} pembayaran tertunggak">
+                                        ⚠️ {{ $penyewa->jumlah_tunggakan }} Tunggakan
+                                    </span>
+                                @endif
+                            </div>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $penyewa->nomor_telepon }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $penyewa->nomor_ktp }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $penyewa->pekerjaan }}</td>
